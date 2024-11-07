@@ -82,3 +82,44 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=os.getenv('PERSONAL_DATA_DB_NAME')
     )
     return cnx
+
+
+def main() -> None:
+    """entry point
+    """
+    logger = get_logger()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(
+        ('SELECT name,'
+         ' email,'
+         ' phone,'
+         ' ssn,'
+         ' password,'
+         ' ip,'
+         ' last_login,'
+         ' user_agent'
+         ' FROM users'))
+    for (name,
+         email,
+         phone,
+         ssn,
+         password,
+         ip,
+         last_login,
+         user_agent) in cursor:
+        message = (f'name={name};'
+                   f'email={email};'
+                   f'phone={phone};'
+                   f'ssn={ssn};'
+                   f'password={password};'
+                   f'ip={ip};'
+                   f'last_login={last_login};'
+                   f'user_agent={user_agent}')
+        logger.log(logging.INFO, message)
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main()
