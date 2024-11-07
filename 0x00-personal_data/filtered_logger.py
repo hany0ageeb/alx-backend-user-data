@@ -18,7 +18,7 @@ import re
 import logging
 
 
-PII_FIELDS = ('ssn', 'email', 'phone', 'ip', 'name')
+PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
 
 def filter_datum(
