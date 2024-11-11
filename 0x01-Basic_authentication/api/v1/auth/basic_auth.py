@@ -53,19 +53,16 @@ class BasicAuth(Auth):
             return (None, None)
         return tuple(decoded_base64_authorization_header.split(':'))
 
-    # type: ignore
     def user_object_from_credentials(
             self,
             user_email: str,
-            user_pwd: str) -> TypeVar('User'):
+            user_pwd: str) -> TypeVar('User'):  # type: ignore
         """user_object_from_credentials
         """
         from models.user import User
         if user_email is None or type(user_email) is not str:
             return None
         if user_pwd is None or type(user_pwd) is not str:
-            return None
-        if User.count() == 0:
             return None
         users = User.search({"email": user_email})
         if users:
@@ -74,3 +71,12 @@ class BasicAuth(Auth):
                     return user
             return None
         return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """current_user
+        """
+        return self.user_object_from_credentials(
+            *self.extract_user_credentials(
+                self.decode_base64_authorization_header(
+                    self.extract_base64_authorization_header(
+                        self.authorization_header()))))
