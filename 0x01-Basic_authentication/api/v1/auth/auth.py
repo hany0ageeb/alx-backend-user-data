@@ -7,13 +7,13 @@ from typing import List, TypeVar
 
 
 class Auth:
-    """Auth
+    """Auth class to manage
     """
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """returns False
         """
         return False
-    
 
     def authorization_header(self, request=None) -> str:
         """that returns None
@@ -21,8 +21,8 @@ class Auth:
             request: the flas request object
         """
         return None
-    
-    def current_user(self, request=None) -> TypeVar('User'):
+
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """returns None
         Args:
             request: the flas request object
