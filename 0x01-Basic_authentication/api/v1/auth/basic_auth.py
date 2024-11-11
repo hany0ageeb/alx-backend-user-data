@@ -2,7 +2,7 @@
 # basic_auth.py
 """class BasicAuth that inherits from Auth
 """
-from auth.auth import Auth
+from .auth import Auth
 
 
 class BasicAuth(Auth):
