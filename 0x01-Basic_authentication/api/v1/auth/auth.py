@@ -28,7 +28,9 @@ class Auth:
         Args:
             request: the flas request object
         """
-        return None
+        if not request:
+            return None
+        return request.headers.get('Authorization', None)
 
     def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """returns None
