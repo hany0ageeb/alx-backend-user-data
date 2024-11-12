@@ -30,6 +30,9 @@ class Auth:
         """
         if not request:
             return None
+        auth_header: str = request.headers.get('Authorization', None)
+        if auth_header:
+            return auth_header.lstrip(' ').rstrip(' ')
         return request.headers.get('Authorization', None)
 
     def current_user(self, request=None) -> TypeVar('User'):  # type: ignore

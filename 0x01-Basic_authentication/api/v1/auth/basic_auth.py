@@ -49,9 +49,11 @@ class BasicAuth(Auth):
             return (None, None)
         if type(decoded_base64_authorization_header) is not str:
             return (None, None)
-        if ':' not in decoded_base64_authorization_header:
+        idx = decoded_base64_authorization_header.find(':')
+        if idx == -1:
             return (None, None)
-        return tuple(decoded_base64_authorization_header.split(':'))
+        return (decoded_base64_authorization_header[0:idx],
+                decoded_base64_authorization_header[idx+1:])
 
     def user_object_from_credentials(
             self,
@@ -72,11 +74,12 @@ class BasicAuth(Auth):
             return None
         return None
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """current_user
         """
-        return self.user_object_from_credentials(
-            *self.extract_user_credentials(
-                self.decode_base64_authorization_header(
-                    self.extract_base64_authorization_header(
-                        self.authorization_header()))))
+        auth_header = self.authorization_header()
+        b64_auth_header = self.extract_base64_authorization_header(auth_header)
+        dec_b64_auth_header = self.decode_base64_authorization_header(
+            b64_auth_header)
+        u_mal, u_pwd = self.extract_user_credentials(dec_b64_auth_header)
+        return self.user_object_from_credentials(u_mal, u_pwd)
