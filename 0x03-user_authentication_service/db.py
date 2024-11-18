@@ -47,3 +47,16 @@ class DB:
             return self._session.query(User).filter_by(**kwargs).one()
         except MultipleResultsFound:
             return self._session.query(User).filter_by(**kwargs).first()
+
+    def update_user(self, user_id, **kwargs):
+        """update_user
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+            for key, value in kwargs.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+                else:
+                    raise ValueError()
+        except NoResultFound:
+            return None
