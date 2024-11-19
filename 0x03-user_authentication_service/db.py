@@ -47,9 +47,10 @@ class DB:
         """
         if not kwargs:
             raise InvalidRequestError
-        column_names = User.__table__.columns.keys()
+        user_keys = ('id', 'email', 'hashed_password',
+                     'session_id', 'reset_token')
         for key in kwargs.keys():
-            if key not in column_names:
+            if key not in user_keys:
                 raise InvalidRequestError
         user = self._session.query(User).filter_by(**kwargs).first()
         if user is None:
@@ -60,10 +61,13 @@ class DB:
         """update_user
         """
         user = self.find_user_by(id=user_id)
+        user_keys = ('id', 'email', 'hashed_password',
+                     'session_id', 'reset_token')
         column_names = User.__table__.columns.keys()
-        for key in kwargs.keys():
-            if key not in column_names:
-                raise ValueError
         for key, value in kwargs.items():
-            setattr(user, key, value)
+            if key not in user_keys:
+                self._session.rollback()
+                raise ValueError
+            else:
+                setattr(user, key, value)
         self._session.commit()
