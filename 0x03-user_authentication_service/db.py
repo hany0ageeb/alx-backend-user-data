@@ -37,13 +37,13 @@ class DB:
         """
         session = self._session
         try:
-            user = User(email=email, hashed_password=hashed_password)
-            session.add(user)
+            new_user = User(email=email, hashed_password=hashed_password)
+            session.add(new_user)
             session.commit()
-            return user
         except Exception:
             session.rollback()
-            return None
+            new_user = None
+        return new_user
 
     def find_user_by(self, **kwargs):
         """fnd_by_user
