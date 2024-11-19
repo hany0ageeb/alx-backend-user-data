@@ -9,6 +9,11 @@ from user import User
 from sqlalchemy.exc import NoResultFound
 
 
+def _generate_uuid() -> str:
+    """generate_uuid"""
+    return str(uuid.uuid4())
+
+
 def _hash_password(password: str) -> bytes:
     """_hash_password
     """
